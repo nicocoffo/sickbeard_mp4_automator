@@ -216,7 +216,7 @@ def processFile(inputfile, tagdata, relativePath=None):
     # Process
     if MkvtoMp4(settings, logger=log).validSource(inputfile):
         converter = MkvtoMp4(settings, logger=log)
-        output = converter.process(inputfile, True)
+        output = converter.process(inputfile, True, plan=settings.plan)
         if output:
             if tagmp4 is not None and output['output_extension'] in valid_tagging_extensions:
                 try:
@@ -284,6 +284,7 @@ def main():
     parser.add_argument('-pr', '--preserveRelative', action='store_true', help="Preserves relative directories when processing multiple files using the copy-to or move-to functionality")
     parser.add_argument('-cmp4', '--convertmp4', action='store_true', help="Overrides convert-mp4 setting in autoProcess.ini enabling the reprocessing of mp4 files")
     parser.add_argument('-m', '--moveto', help="Override move-to value setting in autoProcess.ini changing the final destination of the file")
+    parser.add_argument('-p', '--plan', action='store_true', help="Only plan the conversion, don't actually convert anything")
 
     args = vars(parser.parse_args())
 
@@ -325,6 +326,10 @@ def main():
     if (args['nopost']):
         settings.postprocess = False
         print("No post processing enabled")
+    settings.plan = False
+    if (args['plan']):
+        settings.plan = True
+        print("Only planning the conversion")
 
     # Establish the path we will be working with
     if (args['input']):

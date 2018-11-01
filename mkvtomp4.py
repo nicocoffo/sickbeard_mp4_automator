@@ -175,7 +175,7 @@ class MkvtoMp4:
         self.log.debug("Settings imported.")
 
     # Process a file from start to finish, with checking to make sure formats are compatible with selected settings
-    def process(self, inputfile, reportProgress=False, original=None):
+    def process(self, inputfile, reportProgress=False, original=None, plan=False):
 
         self.log.debug("Process started.")
 
@@ -195,6 +195,10 @@ class MkvtoMp4:
                     self.log.debug(json.dumps(options, sort_keys=False, indent=4))
             except:
                 self.log.exception("Unable to log options.")
+
+            if plan:
+                self.log.info("Exiting due to planning.")
+                return False
 
             outputfile, inputfile = self.convert(inputfile, options, reportProgress)
 
